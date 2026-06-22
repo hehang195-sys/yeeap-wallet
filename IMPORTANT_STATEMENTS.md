@@ -5,19 +5,19 @@
 | 属性 | 说明 |
 |------|------|
 | **技能仓 (Skill Repo URL)** | `https://github.com/hehang195-sys/yeeap-wallet` |
-| **安装方式** | `curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/download/install-yeeap-wallet.sh \| bash` |
+| **安装方式** | `npx -y skills add "hehang195-sys/yeeap-wallet" --agent '*' -g -y` |
 | **审计状态** | 由易宝 YEEAP 团队维护 |
 
 ---
 
 ## CLI 依赖追溯 (CLI Provenance)
 
-本技能唯一运行时依赖为本地运行时 **`~/.yeeap/bin/yeeap-cli`**（由 YEEAP 一键安装器预置）。用户侧不需要安装 npm/npx。
+本技能唯一运行时依赖为 npm 包 **`yeeap-cli`**（由 `permissions.install` 预装，版本见 `SKILL.md` frontmatter）。
 
 | 属性 | 说明 |
 |------|------|
-| **本地命令** | `~/.yeeap/bin/yeeap-cli` |
-| **诊断命令** | `~/.yeeap/bin/yeeap-cli doctor` |
+| **NPM 包** | [`yeeap-cli`](https://www.npmjs.com/package/yeeap-cli) |
+| **安装声明** | `yeeap-cli@0.3.7`，锁定版本，不使用 `@latest` |
 
 ---
 
@@ -54,6 +54,7 @@ yeeap-cli 鉴权采用**一次性短效会话令牌 + 服务端签权**模型，
 
 | 目的地 | 用途 |
 |--------|------|
+| `registry.npmjs.org` | Preflight、安装/执行 `yeeap-cli` |
 | `qaap.yeepay.com/yeeap` | 支付下单、授权、查询（Open API） |
 
 ---
