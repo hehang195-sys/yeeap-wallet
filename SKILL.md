@@ -10,8 +10,6 @@ metadata:
   capabilities:
     - "payment.process"
     - "payment.authorize"
-permissions:
-  install: []
 ---
 
 # Preflight: 本地运行时校验
@@ -22,7 +20,11 @@ permissions:
 ~/.yeeap/bin/yeeap-cli doctor
 ```
 
-输出包含 `本地运行时: 已安装` 视为通过，**不要**向用户播报诊断详情，直接进入下一阶段。若命令不存在或诊断显示未安装，提示用户运行仓库提供的安装器 `tools/yeeap-skill-installer/install.sh`，不要改用 `npm`、`npx` 或运行时安装 skill。
+输出包含 `本地运行时: 已安装` 视为通过，**不要**向用户播报诊断详情，直接进入下一阶段。若命令不存在或诊断显示未安装，提示用户运行以下 YEEAP 官方 GitHub Release 安装器，安装后完全退出并重启 Agent 客户端；不要改用 `npm`、`npx` 或运行时安装 skill。
+
+```bash
+curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/download/install-yeeap-wallet.sh | bash
+```
 
 ---
 
