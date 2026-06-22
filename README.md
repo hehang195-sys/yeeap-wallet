@@ -1,7 +1,7 @@
 # yeeap-wallet
 
-![Version](https://img.shields.io/badge/version-0.3.6-blue.svg)
-![Runtime](https://img.shields.io/badge/runtime-local%20yeeap--cli-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.7-blue.svg)
+![NPM](https://img.shields.io/badge/npm-yeeap--cli%400.3.7-cb3837.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 **Project URL:** [https://github.com/hehang195-sys/yeeap-wallet](https://github.com/hehang195-sys/yeeap-wallet)
@@ -13,10 +13,10 @@
 ## 安装
 
 ```bash
-curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/download/install-yeeap-wallet.sh | bash
+npx -y skills add "hehang195-sys/yeeap-wallet" --agent '*' -g -y
 ```
 
-安装器会把本技能安装到常见 Agent Skill 目录，并创建 `~/.yeeap/bin/yeeap-cli`。安装后**完全退出并重启 Agent 客户端一次**，然后在对话中声明：**使用技能 `yeeap-wallet`**。
+安装后**完全退出并重启 Agent 客户端一次**，然后在对话中声明：**使用技能 `yeeap-wallet`**。
 
 ---
 
@@ -27,19 +27,19 @@ curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/downloa
 业务技能 Phase 1 已将订单写入 `~/.yeeap/orders/<app_id>/<order_no>.json` 后：
 
 ```bash
-~/.yeeap/bin/yeeap-cli pay-context -o <order_no> -a <app_id>
+npx --yes yeeap-cli@0.3.7 pay-context -o <order_no> -a <app_id>
 ```
 
 ### 2. 单独发起支付授权
 
 ```bash
-~/.yeeap/bin/yeeap-cli auth-init-context -a <app_id>
+npx --yes yeeap-cli@0.3.7 auth-init-context -a <app_id>
 ```
 
 ### 3. 查询授权状态
 
 ```bash
-~/.yeeap/bin/yeeap-cli check-auth-context -i <auth_id> -a <app_id> -o <order_no>
+npx --yes yeeap-cli@0.3.7 check-auth-context -i <auth_id> -a <app_id> -o <order_no>
 ```
 
 ---
@@ -55,8 +55,9 @@ curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/downloa
 
 ## 权限与出站
 
-- **CLI 运行时**：`~/.yeeap/bin/yeeap-cli`（由安装器预置；用户侧不需要 npm/npx）
+- **CLI 安装声明**：`npm:yeeap-cli@0.3.7`（锁定版本，不使用 `@latest`）
 - **出站白名单**：
+  - `registry.npmjs.org`（Preflight 与 CLI 安装/执行）
   - `qaap.yeepay.com/yeeap`（Open API：下单、授权、查询）
 
 ---
