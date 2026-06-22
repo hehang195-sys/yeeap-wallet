@@ -1,4 +1,4 @@
-# yeeap-skill
+# yeeap-wallet
 
 ![Version](https://img.shields.io/badge/version-0.3.6-blue.svg)
 ![Runtime](https://img.shields.io/badge/runtime-local%20yeeap--cli-blue.svg)
@@ -13,10 +13,10 @@
 ## 安装
 
 ```bash
-bash tools/yeeap-skill-installer/install.sh
+curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/download/install-yeeap-wallet.sh | bash
 ```
 
-安装器会把本技能与 `yeeap-enterprise-query` 一起安装到常见 Agent Skill 目录，并创建 `~/.yeeap/bin/yeeap-cli`。安装后**完全退出并重启 Agent 客户端一次**，然后在对话中声明：**使用技能 `yeeap-wallet`**。
+安装器会把本技能安装到常见 Agent Skill 目录，并创建 `~/.yeeap/bin/yeeap-cli`。安装后**完全退出并重启 Agent 客户端一次**，然后在对话中声明：**使用技能 `yeeap-wallet`**。
 
 ---
 
