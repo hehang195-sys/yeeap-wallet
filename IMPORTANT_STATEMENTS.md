@@ -5,7 +5,7 @@
 | 属性 | 说明 |
 |------|------|
 | **技能仓 (Skill Repo URL)** | `https://github.com/hehang195-sys/yeeap-wallet` |
-| **安装方式** | `bash tools/yeeap-skill-installer/install.sh` |
+| **安装方式** | `curl -fsSL https://github.com/hehang195-sys/yeeap-wallet/releases/latest/download/install-yeeap-wallet.sh \| bash` |
 | **审计状态** | 由易宝 YEEAP 团队维护 |
 
 ---
