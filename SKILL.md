@@ -2,7 +2,7 @@
 name: "yeeap-wallet"
 description: >
   为第三方业务技能执行 yeeap 支付交易。
-  仅在以下场景严格触发该工具：第三方技能发起了有效的 yeeap 支付请求、用户明确要求发起支付授权、或用户明确要求查看其 yeeap 钱包（无有效条件时严禁触发）。
+  仅在以下场景严格触发该工具：第三方技能发起了有效的 yeeap 支付请求、用户明确要求为 YEEAP 钱包发起支付授权、或用户明确要求查看其 yeeap 钱包（无有效条件时严禁触发）。
   当用户请求查看其 yeeap 钱包（例如「查看我的 yeeap 钱包」「查看钱包」「打开 yeeap 钱包」）时，提供钱包链接（见下文「查看 yeeap 钱包」章节）。
 disable_model_invocation: false
 metadata:
@@ -42,7 +42,7 @@ npm view yeeap-cli@0.3.8 version
 - **凭证安全**：流程依赖统一的授权 URL 与一次性短效会话令牌运作；**永远不要主动向用户索要支付密码或私钥**，也不要在日志中留存敏感凭据。
 - **本地文件**：订单详情位于 `~/.yeeap/orders/<app_id>/<order_no>.json`，仅由 CLI 读写；**禁止**使用 Read 等通用文件工具读取该文件原文对外展示。
 - **当前会话绑定**：执行 `pay-context` / `auth-init-context` / `check-auth-context`，由 CLI 内部完成支付上下文准备；不得向用户展示或解释上下文内容。
-- **禁止自行探测身份变量**：不得在支付前执行 `echo AGENT_SESSION_ID`、`env`、`printenv` 等命令判断 agentId / loginAccount 是否存在；WorkBuddy 等客户端的原生变量名不一定是 `AGENT_SESSION_ID`，必须让 CLI 统一采集。
+- **禁止自行探测或注入身份上下文**：不得执行 `env`、`printenv`、`set`、`export`、`echo $AGENT_SESSION_ID` 等命令判断 agentId / loginAccount 是否存在；不得读取 shell profile、`.env`、npm config、Agent 配置文件或历史日志来推断身份；不得手动设置 `AGENT_SESSION_ID`、`CODEBUDDY_SESSION_ID`、`YEEAP_CLIENT_TYPE` 等变量。WorkBuddy 等客户端的原生变量名不一定是 `AGENT_SESSION_ID`，必须让 CLI 统一采集。CLI 报身份缺失时，只能展示 CLI 错误并停止，不得自行补救。
 
 > [!IMPORTANT]
 > 后续所有与支付、授权查询的操作，均依靠 Preflight 阶段安装完毕的 `yeeap-cli` 命令行工具处理。
@@ -170,7 +170,7 @@ env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy -u ALL_PROXY -u al
 * **含义**：`pay-query` 只确认服务端订单已成功，不返回也不写入 `payCredential`。
 * **处理动作**：
   1. 不得进入调用方业务技能 Phase 3。
-  2. 使用原 `order_no` 与 `app_id` 自动重新执行一次 `pay-context -o <order_no> -a <app_id>`，走后端 SUCCESS 幂等路径获取并写入支付凭证。
+  2. 使用原 `order_no` 与 `app_id`，按上文「处理支付请求 → 2. 执行命令」中的完整 npm 环境锁定模板自动重新执行一次 `pay-context`，走后端 SUCCESS 幂等路径获取并写入支付凭证；不得使用裸 `npx` 命令，不得更换 CLI 版本，不得添加额外参数。
   3. 重提后必须重新按本节结果处理规则分流；若仍未出现 `已获取到支付凭证`，向用户报告“订单已成功但支付凭证尚未写入”，不要继续业务执行。
 
 ---
@@ -189,7 +189,7 @@ env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy -u ALL_PROXY -u al
 * **含义**：在用户完成授权前，支付无法继续。
 * **处理动作**：
   1. CLI 输出包含面向用户的授权链接。将该链接作为官方**授权链接**展示给用户；若存在 `返回消息: <MESSAGE>`，请一并作为补充上下文。
-  2. 从授权 URL 提取 `auth_id`（即查询参数 `authId`，例如 `...?authId=<AUTH_ID>`）；该值仅用于后续 `check-auth`，不得展示给用户。
+  2. 从授权 URL 提取 `auth_id`（即查询参数 `authId`，例如 `...?authId=<AUTH_ID>`）；该值仅用于后续 `check-auth-context`，不得展示给用户。
   3. 提示用户完成授权：「扫码完成授权后，请告诉我「**我已授权**」或「**我已完成授权**」，以便继续支付流程。」
 
   #### **用户确认已授权后的处理流程**
@@ -247,7 +247,7 @@ npx --yes yeeap-cli@0.3.8 pay-query -o <order_no> -a <app_id>
 * **处理中**：告知用户支付仍在处理中；不得重复执行 `pay-context`。
 * **订单不存在 / NOT_FOUND / 查询不到订单**：
   * **触发条件**：`pay-query` 输出包含 `订单不存在`、`网络或系统异常: 订单不存在`、`NOT_FOUND` 或 `查询不到订单`。
-  1. 若当前流程已经确认授权成功（`Status: successful`）或本地 token 已写入，说明支付尚未真正提交或未落库；使用原 `order_no` 与 `app_id` **自动重新执行一次** `pay-context -o <order_no> -a <app_id>`。
+  1. 若当前流程已经确认授权成功（`Status: successful`）或本地 token 已写入，说明支付尚未真正提交或未落库；使用原 `order_no` 与 `app_id`，按上文「处理支付请求 → 2. 执行命令」中的完整 npm 环境锁定模板**自动重新执行一次** `pay-context`；不得使用裸 `npx` 命令，不得更换 CLI 版本，不得添加额外参数。
   2. 仅允许对同一订单自动重提一次；不得新建订单，不得要求用户重新授权，不得无限重试。
   3. 重提后按「处理支付请求 → 3. 结果处理规则」重新分流。若仍然订单不存在或命令未提交成功，向用户报告支付提交失败，并展示 CLI 返回的关键错误信息。
 * **其他失败**：按**步骤 2.1**评估是否存在授权恢复路径；没有授权指示时报告失败。
@@ -256,11 +256,13 @@ npx --yes yeeap-cli@0.3.8 pay-query -o <order_no> -a <app_id>
 
 # 发起支付授权（auth-init）
 
-当 `pay` 步骤 3 直接提示需授权、或用户明确要求「单独发起支付授权」时执行：
+当 `pay-context` 的步骤 3 直接提示需授权、或用户明确要求「单独发起支付授权」时执行：
 
 ## 1. 必需参数
 
-* 无强制必填参数。若上下文包含 `app_id`，应通过 `-a <app_id>` 透传。
+* **`app_id`**（string，**必填**）：必须由调用方业务技能或当前支付流程明确提供。
+
+缺少 `app_id` 时必须停止；不得执行 `auth-init-context`，不得猜测，不得读取订单文件、环境变量、历史日志或本地配置补全。应要求调用方业务技能提供 `app_id`。
 
 ## 2. 执行命令
 
@@ -285,7 +287,11 @@ npx --yes yeeap-cli@0.3.8 auth-init-context -a <app_id>
 
 ## 1. 必需参数
 
-* **`auth_id`**（string，**必填**）：来自 `pay` 或 `auth-init` 输出的授权 ID。
+* **`auth_id`**（string，**必填**）：来自 `pay-context` 或 `auth-init-context` 输出的授权 ID。
+* **`app_id`**（string，支付流程内**必填**）：必须使用同一支付流程原始 `app_id`。
+* **`order_no`**（string，支付流程内**必填**）：必须使用同一支付流程原始 `order_no`。
+
+若 `app_id` 或 `order_no` 缺失，必须停止；不得执行 `check-auth-context`，不得猜测，不得探测环境变量，不得读取本地订单文件，不得从历史日志补全。应要求调用方业务技能重新提供原始 `order_no` 与 `app_id`。
 
 ## 2. 执行命令
 
@@ -329,4 +335,4 @@ npx --yes yeeap-cli@0.3.8 check-auth-context -i <auth_id> -a <app_id> -o <order_
 >
 > 👉 [打开 yeeap 钱包](https://qaap.yeepay.com/yeeap/)
 >
-> 支付授权链接由 `pay` / `auth-init` 命令的输出提供，请勿与本钱包页面混淆。
+> 支付授权链接由 `pay-context` / `auth-init-context` 命令的输出提供，请勿与本钱包页面混淆。
