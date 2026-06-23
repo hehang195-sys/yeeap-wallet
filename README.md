@@ -20,27 +20,11 @@ npx -y skills add "hehang195-sys/yeeap-wallet" --agent '*' -g -y
 
 ---
 
-## 调用示例
+## 调用协议
 
-### 1. 处理支付（业务技能 Phase 2 调用）
+业务技能 Phase 1 已将订单写入 `~/.yeeap/orders/<app_id>/<order_no>.json` 后，Phase 2 只向 `yeeap-wallet` 传入 `order_no` 与 `app_id`。
 
-业务技能 Phase 1 已将订单写入 `~/.yeeap/orders/<app_id>/<order_no>.json` 后：
-
-```bash
-npx --yes yeeap-cli@0.3.8 pay-context -o <order_no> -a <app_id>
-```
-
-### 2. 单独发起支付授权
-
-```bash
-npx --yes yeeap-cli@0.3.8 auth-init-context -a <app_id>
-```
-
-### 3. 查询授权状态
-
-```bash
-npx --yes yeeap-cli@0.3.8 check-auth-context -i <auth_id> -a <app_id> -o <order_no>
-```
+具体命令模板、npm 环境锁定、授权查询、支付结果分流与禁止项均以 [SKILL.md](./SKILL.md) 为准。不要从 README 复制裸 `npx` 命令执行支付、授权或查询。
 
 ---
 
@@ -48,7 +32,7 @@ npx --yes yeeap-cli@0.3.8 check-auth-context -i <auth_id> -a <app_id> -o <order_
 
 | 文件 | 说明 |
 |------|------|
-| [SKILL.md](./SKILL.md) | Agent 调用协议（pay / auth-init / check-auth 与 stdout 分流） |
+| [SKILL.md](./SKILL.md) | Agent 调用协议（pay-context / auth-init-context / check-auth-context 与 stdout 分流） |
 | [IMPORTANT_STATEMENTS.md](./IMPORTANT_STATEMENTS.md) | 技能来源追溯、CLI 鉴权原理、出站白名单、触发边界 |
 
 ---
