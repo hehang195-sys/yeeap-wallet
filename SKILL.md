@@ -20,10 +20,11 @@ permissions:
 在每次会话发起首次支付或授权相关命令前，请先静默执行一次远端版本校验，确保使用的是预置并锁定的安全版本。
 
 ```bash
-TMPDIR="$(mktemp -d)"
+YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"
+mkdir -p "$YEEAP_NPM_CACHE"
 NPM_CONFIG_USERCONFIG="/dev/null" \
 NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" \
-NPM_CONFIG_CACHE="$TMPDIR/npm-cache" \
+NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" \
 NPM_CONFIG_UPDATE_NOTIFIER=false \
 npm view yeeap-cli@wallet-stable version
 ```
@@ -66,10 +67,11 @@ npm view yeeap-cli@wallet-stable version
 使用 CLI 的支付上下文模式执行支付；不要解析、展示或解释上下文过程：
 
 ```bash
-TMPDIR="$(mktemp -d)"
+YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"
+mkdir -p "$YEEAP_NPM_CACHE"
 NPM_CONFIG_USERCONFIG="/dev/null" \
 NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" \
-NPM_CONFIG_CACHE="$TMPDIR/npm-cache" \
+NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" \
 NPM_CONFIG_UPDATE_NOTIFIER=false \
 npx --yes yeeap-cli@wallet-stable pay-context -o <order_no> -a <app_id>
 ```
@@ -80,7 +82,7 @@ npx --yes yeeap-cli@wallet-stable pay-context -o <order_no> -a <app_id>
 
 ```bash
 env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy -u ALL_PROXY -u all_proxy \
-  sh -c 'TMPDIR="$(mktemp -d)"; NPM_CONFIG_USERCONFIG="/dev/null" NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" NPM_CONFIG_CACHE="$TMPDIR/npm-cache" NPM_CONFIG_UPDATE_NOTIFIER=false npx --yes yeeap-cli@wallet-stable pay-context -o "<order_no>" -a "<app_id>"'
+  sh -c 'YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"; mkdir -p "$YEEAP_NPM_CACHE"; NPM_CONFIG_USERCONFIG="/dev/null" NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" NPM_CONFIG_UPDATE_NOTIFIER=false npx --yes yeeap-cli@wallet-stable pay-context -o "<order_no>" -a "<app_id>"'
 ```
 
 ## 3. 结果处理规则
@@ -234,10 +236,11 @@ env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy -u ALL_PROXY -u al
 * **执行命令**：
 
 ```bash
-TMPDIR="$(mktemp -d)"
+YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"
+mkdir -p "$YEEAP_NPM_CACHE"
 NPM_CONFIG_USERCONFIG="/dev/null" \
 NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" \
-NPM_CONFIG_CACHE="$TMPDIR/npm-cache" \
+NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" \
 NPM_CONFIG_UPDATE_NOTIFIER=false \
 npx --yes yeeap-cli@wallet-stable pay-query -o <order_no> -a <app_id>
 ```
@@ -267,10 +270,11 @@ npx --yes yeeap-cli@wallet-stable pay-query -o <order_no> -a <app_id>
 ## 2. 执行命令
 
 ```bash
-TMPDIR="$(mktemp -d)"
+YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"
+mkdir -p "$YEEAP_NPM_CACHE"
 NPM_CONFIG_USERCONFIG="/dev/null" \
 NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" \
-NPM_CONFIG_CACHE="$TMPDIR/npm-cache" \
+NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" \
 NPM_CONFIG_UPDATE_NOTIFIER=false \
 npx --yes yeeap-cli@wallet-stable auth-init-context -a <app_id>
 ```
@@ -296,10 +300,11 @@ npx --yes yeeap-cli@wallet-stable auth-init-context -a <app_id>
 ## 2. 执行命令
 
 ```bash
-TMPDIR="$(mktemp -d)"
+YEEAP_NPM_CACHE="${HOME}/.yeeap/npm-cache"
+mkdir -p "$YEEAP_NPM_CACHE"
 NPM_CONFIG_USERCONFIG="/dev/null" \
 NPM_CONFIG_REGISTRY="https://registry.npmjs.org/" \
-NPM_CONFIG_CACHE="$TMPDIR/npm-cache" \
+NPM_CONFIG_CACHE="$YEEAP_NPM_CACHE" \
 NPM_CONFIG_UPDATE_NOTIFIER=false \
 npx --yes yeeap-cli@wallet-stable check-auth-context -i <auth_id> -a <app_id> -o <order_no>
 ```
