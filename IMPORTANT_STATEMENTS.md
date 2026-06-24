@@ -17,7 +17,7 @@
 | 属性 | 说明 |
 |------|------|
 | **NPM 包** | [`yeeap-cli`](https://www.npmjs.com/package/yeeap-cli) |
-| **安装声明** | `yeeap-cli@0.3.9`，锁定版本，不使用 `@latest` |
+| **安装声明** | `yeeap-cli@wallet-stable`，YEEAP 官方支付稳定版 dist-tag，不使用 `@latest` |
 
 ---
 
