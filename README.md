@@ -40,6 +40,7 @@ npx -y skills add "hehang195-sys/yeeap-wallet" --agent '*' -g -y
 ## 权限与出站
 
 - **CLI 安装声明**：`npm:yeeap-cli@wallet-stable`（YEEAP 官方支付稳定版 dist-tag，不使用 `@latest`）
+- **npm 缓存目录**：固定使用 `~/.yeeap/npm-cache`，避免每次执行创建随机临时缓存目录
 - **出站白名单**：
   - `registry.npmjs.org`（Preflight 与 CLI 安装/执行）
   - `qaap.yeepay.com/yeeap`（Open API：下单、授权、查询）
