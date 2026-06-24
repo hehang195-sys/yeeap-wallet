@@ -1,7 +1,7 @@
 # yeeap-wallet
 
-![Version](https://img.shields.io/badge/version-0.3.9-blue.svg)
-![NPM](https://img.shields.io/badge/npm-yeeap--cli%400.3.9-cb3837.svg)
+![CLI](https://img.shields.io/badge/cli-yeeap--cli%40wallet--stable-blue.svg)
+![NPM](https://img.shields.io/badge/npm-dist--tag%3Awallet--stable-cb3837.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 **Project URL:** [https://github.com/hehang195-sys/yeeap-wallet](https://github.com/hehang195-sys/yeeap-wallet)
@@ -39,7 +39,7 @@ npx -y skills add "hehang195-sys/yeeap-wallet" --agent '*' -g -y
 
 ## 权限与出站
 
-- **CLI 安装声明**：`npm:yeeap-cli@0.3.9`（锁定版本，不使用 `@latest`）
+- **CLI 安装声明**：`npm:yeeap-cli@wallet-stable`（YEEAP 官方支付稳定版 dist-tag，不使用 `@latest`）
 - **出站白名单**：
   - `registry.npmjs.org`（Preflight 与 CLI 安装/执行）
   - `qaap.yeepay.com/yeeap`（Open API：下单、授权、查询）
